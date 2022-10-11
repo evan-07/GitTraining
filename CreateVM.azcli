@@ -1,10 +1,13 @@
+#####################
 ##--Set Variables--##
+#####################
 rg="Github-RG"
 location="eastus2"
 image="UbuntuLTS"
 vnetnsg=vnetnsg
 size=Standard_B1ls
 vm1=vmgit1
+zone=evantech.dev
 
 #############################
 ##--Create Resource Group--##
@@ -41,8 +44,26 @@ az vm create --name $vm1 \
 --public-ip-sku Standard \
 --nsg $vnetnsg
 
+
+##############################
+###--Get IP address of VM--###
+##############################
+publicip=$(az vm show --show-details \
+--resource-group $rg \
+--name $vm1 \
+--query publicIps \
+--output tsv)
+
+#############################################
+###--Add an A record set to the DNS zone--###
+#############################################
+az network dns record-set a add-record --ipv4-address $publicip \
+--resource-group $rg \
+--record-set-name $vm1 \
+--zone $zone
+
 ##############################
 ###--Using Command Prompt--###
 ##############################
-ssh uservera@20.75.67.135
+ssh uservera@vmgit1.evantech.dev
 #password: Thisismygit1!
