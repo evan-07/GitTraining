@@ -1,0 +1,48 @@
+##--Set Variables--##
+rg="Github-RG"
+location="eastus2"
+image="UbuntuLTS"
+vnetnsg=vnetnsg
+size=Standard_B1ls
+vm1=vmgit1
+
+#############################
+##--Create Resource Group--##
+#############################
+az group create --name $rg --location $location
+
+##################
+##--Create NSG--##
+##################
+az network nsg create --name $vnetnsg --resource-group $rg --location $location
+
+#######################
+##--Create NSG Rule--##
+#######################
+az network nsg rule create --name AllowSSHInbound \
+                           --nsg-name $vnetnsg \
+                           --priority 1000 \
+                           --resource-group $rg \
+                           --access Allow \
+                           --destination-port-ranges 22\
+                           --description "Allow SSH Inbound Connections" \
+                           --direction Inbound \
+                           --protocol TCP
+#################
+##--Create VM--##
+#################
+az vm create --name $vm1 \
+--resource-group $rg \
+--location $location \
+--image $image \
+--admin-username uservera \
+--admin-password Thisismygit1! \
+--vnet-name $vnetnsg  \
+--public-ip-sku Standard \
+--nsg $vnetnsg
+
+##############################
+###--Using Command Prompt--###
+##############################
+ssh uservera@20.75.67.135
+#password: Thisismygit1!
