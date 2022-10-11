@@ -65,5 +65,5 @@ az network dns record-set a add-record --ipv4-address $publicip \
 ##############################
 ###--Using Command Prompt--###
 ##############################
-ssh uservera@vmgit1.evantech.dev
+#ssh uservera@vmgit1.evantech.dev
 #password: Thisismygit1!
